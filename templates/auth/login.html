@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="auth-page d-flex align-items-center justify-content-center min-vh-100">
+    <div class="auth-card card shadow-lg border-0">
+        <div class="auth-card-header text-center py-4">
+            <i class="bi bi-mountain-sun-fill display-4 text-white"></i>
+            <h1 class="h3 text-white mt-2 mb-0 fw-bold">TrekApp</h1>
+            <p class="text-white-50 mb-0 small">Trekking Management System</p>
+        </div>
+        <div class="card-body p-4">
+            <h2 class="h5 fw-semibold mb-4 text-center">Welcome back</h2>
+            <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+                <div class="mb-3">
+                    <label for="username_or_email" class="form-label fw-medium">Username or Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-person text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 ps-0"
+                               id="username_or_email" name="username_or_email"
+                               placeholder="Enter username or email" required autofocus>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-medium">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="bi bi-lock text-muted"></i>
+                        </span>
+                        <input type="password" class="form-control border-start-0 ps-0"
+                               id="password" name="password"
+                               placeholder="Enter password" required>
+                    </div>
+                </div>
+                <div class="mb-4 d-flex align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <label class="form-check-label text-muted small" for="remember">Remember me</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-trek w-100 py-2 fw-semibold">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </button>
+            </form>
+            <hr class="my-4">
+            <p class="text-center text-muted mb-0 small">
+                Don't have an account?
+                <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-medium">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

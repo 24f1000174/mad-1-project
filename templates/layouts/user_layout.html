@@ -1,0 +1,79 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a class="sidebar-brand" href="{{ url_for('user.dashboard') }}">
+                <i class="bi bi-mountain-sun-fill me-2"></i>
+                <span>TrekApp</span>
+            </a>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a href="{{ url_for('user.dashboard') }}" class="sidebar-link {% if request.endpoint == 'user.dashboard' %}active{% endif %}">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('user.browse_treks') }}" class="sidebar-link {% if 'browse' in request.endpoint or 'trek_detail' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-compass"></i> Browse Treks
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('user.booking_history') }}" class="sidebar-link {% if 'booking' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-journal-check"></i> My Bookings
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('user.profile') }}" class="sidebar-link {% if 'profile' in request.endpoint %}active{% endif %}">
+                    <i class="bi bi-person-circle"></i> My Profile
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user-info">
+                <i class="bi bi-person-circle me-2"></i>
+                <span>{{ current_user.username }}</span>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link text-danger mt-2">
+                <i class="bi bi-box-arrow-left"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="main-content">
+        <header class="top-navbar">
+            <button class="sidebar-toggle btn btn-link" id="sidebar-toggle">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <div class="top-navbar-title">{% block page_title %}{% endblock %}</div>
+            <div class="top-navbar-right">
+                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2">
+                    <i class="bi bi-person-fill me-1"></i> Trekker
+                </span>
+            </div>
+        </header>
+        <div class="page-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const toggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main-content');
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        main.classList.toggle('expanded');
+    });
+</script>
+{% endblock %}

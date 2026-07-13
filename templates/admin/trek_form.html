@@ -1,0 +1,97 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}{{ 'Create Trek' if mode == 'create' else 'Edit Trek' }}{% endblock %}
+
+{% block page_title %}
+<h5 class="mb-0 fw-semibold">{{ 'Create New Trek' if mode == 'create' else 'Edit Trek' }}</h5>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-{{ 'plus-circle' if mode == 'create' else 'pencil' }} me-2 text-primary"></i>
+                    Trek Details
+                </h6>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" novalidate>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-medium">Trek Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                               value="{{ trek.title if trek else '' }}" placeholder="e.g. Himalayan Valley Trek">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-medium">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required
+                                  placeholder="Describe the trek route, highlights, and key information...">{{ trek.description if trek else '' }}</textarea>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="difficulty" class="form-label fw-medium">Difficulty <span class="text-danger">*</span></label>
+                            <select class="form-select" id="difficulty" name="difficulty" required>
+                                <option value="">Select...</option>
+                                {% for d in difficulties %}
+                                <option value="{{ d }}" {% if trek and trek.difficulty == d %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="price" class="form-label fw-medium">Price (₹) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="price" name="price" min="1" step="0.01" required
+                                   value="{{ trek.price if trek else '' }}" placeholder="2000">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="max_slots" class="form-label fw-medium">Max Slots <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="max_slots" name="max_slots" min="1" required
+                                   value="{{ trek.max_slots if trek else '' }}" placeholder="20">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label fw-medium">Start Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required
+                                   value="{{ trek.start_date.strftime('%Y-%m-%d') if trek else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label fw-medium">End Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required
+                                   value="{{ trek.end_date.strftime('%Y-%m-%d') if trek else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="staff_id" class="form-label fw-medium">Assign Staff <span class="text-muted fw-normal">(Optional)</span></label>
+                        <select class="form-select" id="staff_id" name="staff_id">
+                            <option value="">-- Leave Unassigned --</option>
+                            {% for s in approved_staff %}
+                            <option value="{{ s.id }}" {% if trek and trek.staff_id == s.id %}selected{% endif %}>
+                                {{ s.username }} ({{ s.profile.full_name if s.profile and s.profile.full_name else 'No name' }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if not approved_staff %}
+                        <div class="form-text text-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i>No approved staff available.
+                            <a href="{{ url_for('admin.staff_list') }}">Approve staff first.</a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-trek px-4">
+                            <i class="bi bi-check-circle me-2"></i>{{ 'Create Trek' if mode == 'create' else 'Save Changes' }}
+                        </button>
+                        <a href="{{ url_for('admin.treks') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

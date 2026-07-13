@@ -1,0 +1,47 @@
+{% extends "layouts/user_layout.html" %}
+{% block title %}My Profile{% endblock %}
+{% block page_title %}<h5 class="mb-0 fw-semibold">My Profile</h5>{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-person-circle me-2 text-primary"></i>Personal Details</h6>
+                <a href="{{ url_for('user.edit_profile') }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil me-1"></i>Edit Profile
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="text-muted small">Username</div>
+                        <div class="fw-semibold text-dark fs-5">{{ user.username }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small">Email Address</div>
+                        <div class="fw-semibold text-dark fs-5">{{ user.email }}</div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="col-md-6">
+                        <div class="text-muted small">Full Name</div>
+                        <div class="fw-medium text-dark">{{ user.profile.full_name or '—' }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small">Phone Number</div>
+                        <div class="fw-medium text-dark">{{ user.profile.phone or '—' }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small">Emergency Contact</div>
+                        <div class="fw-medium text-dark">{{ user.profile.emergency_contact or '—' }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small">Address / Location</div>
+                        <div class="fw-medium text-dark">{{ user.profile.address or '—' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

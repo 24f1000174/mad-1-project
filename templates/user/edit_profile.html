@@ -1,0 +1,47 @@
+{% extends "layouts/user_layout.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block page_title %}<h5 class="mb-0 fw-semibold">Edit Profile</h5>{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-pencil-square me-2 text-primary"></i>Update Profile Details</h6>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('user.edit_profile') }}" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="full_name" class="form-label fw-medium">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name"
+                                   value="{{ user.profile.full_name or '' }}" placeholder="Enter full name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label fw-medium">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                   value="{{ user.profile.phone or '' }}" placeholder="Enter phone number">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="emergency_contact" class="form-label fw-medium">Emergency Contact</label>
+                            <input type="text" class="form-control" id="emergency_contact" name="emergency_contact"
+                                   value="{{ user.profile.emergency_contact or '' }}" placeholder="Emergency phone or contact info">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="address" class="form-label fw-medium">Address / Location</label>
+                            <input type="text" class="form-control" id="address" name="address"
+                                   value="{{ user.profile.address or '' }}" placeholder="City, State, Country">
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-trek px-4">
+                            <i class="bi bi-check-circle me-2"></i>Save Changes
+                        </button>
+                        <a href="{{ url_for('user.profile') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

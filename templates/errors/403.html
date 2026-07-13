@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %}Access Forbidden{% endblock %}
+{% block body %}
+<div class="auth-page d-flex align-items-center justify-content-center min-vh-100 text-center">
+    <div>
+        <h1 class="display-1 fw-bold text-danger">403</h1>
+        <h2 class="h4 mb-3">Access Forbidden</h2>
+        <p class="text-muted mb-4">You don't have permission to access this page.</p>
+        <a href="{{ url_for('common.index') }}" class="btn btn-trek">
+            <i class="bi bi-arrow-left me-2"></i>Go Back Home
+        </a>
+    </div>
+</div>
+{% endblock %}

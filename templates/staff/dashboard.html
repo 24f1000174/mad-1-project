@@ -1,0 +1,55 @@
+{% extends "layouts/staff_layout.html" %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block page_title %}<h5 class="mb-0 fw-semibold">My Assigned Treks</h5>{% endblock %}
+
+{% block content %}
+{% if treks %}
+<div class="row g-3">
+    {% for trek in treks %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card border-0 shadow-sm h-100 trek-card">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <span class="badge trek-status-{{ trek.status|lower }}">
+                    <i class="bi bi-{{ 'clock' if trek.status == 'Upcoming' else 'play-circle' if trek.status == 'Started' else 'check-circle' if trek.status == 'Completed' else 'x-circle' }} me-1"></i>
+                    {{ trek.status }}
+                </span>
+                <span class="badge diff-{{ trek.difficulty|lower }}">{{ trek.difficulty }}</span>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold mb-1">{{ trek.title }}</h6>
+                <p class="text-muted small mb-3">{{ trek.description|truncate(80) }}</p>
+
+                <div class="d-flex justify-content-between small mb-1">
+                    <span class="text-muted"><i class="bi bi-calendar3 me-1"></i>Start</span>
+                    <span class="fw-medium">{{ trek.start_date.strftime('%d %b %Y') }}</span>
+                </div>
+                <div class="d-flex justify-content-between small mb-1">
+                    <span class="text-muted"><i class="bi bi-calendar-check me-1"></i>End</span>
+                    <span class="fw-medium">{{ trek.end_date.strftime('%d %b %Y') }}</span>
+                </div>
+                <div class="d-flex justify-content-between small mb-3">
+                    <span class="text-muted"><i class="bi bi-people me-1"></i>Slots</span>
+                    <span class="fw-medium {{ 'text-success' if trek.available_slots > 0 else 'text-danger' }}">
+                        {{ trek.available_slots }} / {{ trek.max_slots }} available
+                    </span>
+                </div>
+
+                <a href="{{ url_for('staff.trek_detail', trek_id=trek.id) }}"
+                   class="btn btn-trek btn-sm w-100">
+                    <i class="bi bi-arrow-right-circle me-1"></i>Manage Trek
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-map display-4 d-block mb-3"></i>
+        <h6 class="fw-semibold mb-2">No treks assigned yet</h6>
+        <p class="small">An administrator will assign treks to your account shortly.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

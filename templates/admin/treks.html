@@ -1,0 +1,188 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}Manage Treks{% endblock %}
+
+{% block page_title %}<h5 class="mb-0 fw-semibold">Trek Management</h5>{% endblock %}
+
+{% block content %}
+
+<!-- Search & Filter Bar -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body py-3">
+        <form method="GET" action="{{ url_for('admin.treks') }}" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-medium mb-1">Search</label>
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Trek title..." value="{{ filters.q }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-medium mb-1">Difficulty</label>
+                <select name="difficulty" class="form-select form-select-sm">
+                    <option value="">All</option>
+                    {% for d in difficulties %}
+                    <option value="{{ d }}" {% if filters.difficulty == d %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-medium mb-1">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All</option>
+                    {% for s in statuses %}
+                    <option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-medium mb-1">Min Price (₹)</label>
+                <input type="number" name="min_price" class="form-control form-control-sm" placeholder="0" value="{{ filters.min_price }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-medium mb-1">Max Price (₹)</label>
+                <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Any" value="{{ filters.max_price }}">
+            </div>
+            <div class="col-md-1 d-flex gap-1">
+                <button type="submit" class="btn btn-trek btn-sm w-100"><i class="bi bi-search"></i></button>
+                <a href="{{ url_for('admin.treks') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted small">{{ treks|length }} trek(s) found</span>
+    <a href="{{ url_for('admin.create_trek') }}" class="btn btn-trek btn-sm">
+        <i class="bi bi-plus-circle me-1"></i>Create Trek
+    </a>
+</div>
+
+<!-- Treks Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        {% if treks %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Title</th>
+                        <th>Difficulty</th>
+                        <th>Dates</th>
+                        <th>Price</th>
+                        <th>Slots</th>
+                        <th>Status</th>
+                        <th>Staff</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trek in treks %}
+                    <tr>
+                        <td class="ps-3">
+                            <div class="fw-medium">{{ trek.title }}</div>
+                            <div class="text-muted small">{{ trek.description|truncate(40) }}</div>
+                        </td>
+                        <td>
+                            <span class="badge diff-{{ trek.difficulty|lower }}">{{ trek.difficulty }}</span>
+                        </td>
+                        <td class="small text-muted">
+                            {{ trek.start_date.strftime('%d %b') }} – {{ trek.end_date.strftime('%d %b %Y') }}
+                        </td>
+                        <td class="fw-medium">₹{{ "%.0f"|format(trek.price) }}</td>
+                        <td>
+                            <span class="{{ 'text-success' if trek.available_slots > 0 else 'text-danger' }} fw-medium">
+                                {{ trek.available_slots }}
+                            </span>
+                            <span class="text-muted small">/ {{ trek.max_slots }}</span>
+                        </td>
+                        <td>
+                            <span class="badge trek-status-{{ trek.status|lower }}">{{ trek.status }}</span>
+                        </td>
+                        <td class="small">
+                            {% if trek.assigned_staff %}
+                                <i class="bi bi-person-check text-success me-1"></i>{{ trek.assigned_staff.username }}
+                            {% else %}
+                                <span class="text-muted fst-italic">Unassigned</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3">
+                            <div class="d-flex gap-1 justify-content-end">
+                                <!-- Assign Staff -->
+                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#assignModal{{ trek.id }}" title="Assign Staff">
+                                    <i class="bi bi-person-plus"></i>
+                                </button>
+                                <!-- Edit -->
+                                <a href="{{ url_for('admin.edit_trek', trek_id=trek.id) }}"
+                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <!-- Delete -->
+                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal{{ trek.id }}" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+
+                            <!-- Assign Staff Modal -->
+                            <div class="modal fade" id="assignModal{{ trek.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title">Assign Staff</h6>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST" action="{{ url_for('admin.assign_staff', trek_id=trek.id) }}">
+                                            <div class="modal-body">
+                                                <p class="small text-muted mb-2">Trek: <strong>{{ trek.title }}</strong></p>
+                                                <select name="staff_id" class="form-select form-select-sm">
+                                                    <option value="">-- Unassign --</option>
+                                                    {% for s in approved_staff %}
+                                                    <option value="{{ s.id }}" {% if trek.staff_id == s.id %}selected{% endif %}>
+                                                        {{ s.username }}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-trek btn-sm w-100">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal{{ trek.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title text-danger">Confirm Delete</h6>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body small">
+                                            Delete <strong>{{ trek.title }}</strong>? This will also remove all associated bookings.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="{{ url_for('admin.delete_trek', trek_id=trek.id) }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-5">
+            <i class="bi bi-map display-5 d-block mb-3"></i>
+            <p class="mb-2">No treks found.</p>
+            <a href="{{ url_for('admin.create_trek') }}" class="btn btn-trek btn-sm">Create your first trek</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

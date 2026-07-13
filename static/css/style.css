@@ -1,0 +1,453 @@
+/* ==========================================================================
+   Trekking Management App - Custom Stylesheet
+   Roll Number: 24F1000174
+   ========================================================================== */
+
+/* Custom Typography & Base Variables */
+:root {
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    /* Harmonious Outdoor-Modern Palette */
+    --primary: #1e5f3f;
+    /* Rich Forest Green */
+    --primary-light: #2d8a5c;
+    --primary-dark: #123d28;
+    --primary-rgb: 30, 95, 63;
+
+    --secondary: #e6a15c;
+    /* Warm Trail Gold */
+    --secondary-hover: #d18d45;
+
+    --bg-app: #f5f7f6;
+    /* Soft Off-White/Sage Gray */
+    --bg-card: #ffffff;
+    --text-main: #2b3a32;
+    --text-muted: #62756a;
+    --border-color: #e2e8e4;
+
+    /* Role Specific Palette */
+    --role-admin: #6f42c1;
+    --role-staff: #198754;
+    --role-trekker: #0d6efd;
+
+    /* UI Status Colors */
+    --status-upcoming: #0dcaf0;
+    --status-started: #ffc107;
+    --status-completed: #198754;
+    --status-closed: #6c757d;
+
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 70px;
+    --navbar-height: 70px;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Utility Typography --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* --- Common UI Components --- */
+.btn-trek {
+    background-color: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    transition: all var(--transition-speed) ease;
+    font-weight: 500;
+}
+
+.btn-trek:hover {
+    background-color: var(--primary-light);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 95, 63, 0.2);
+}
+
+.btn-trek:active {
+    transform: translateY(0);
+}
+
+/* Form Styling */
+.form-control,
+.form-select {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(30, 95, 63, 0.1);
+}
+
+/* --- Authentication Pages --- */
+.auth-page {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #15221b 100%),
+        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1950&q=80');
+    background-size: cover;
+    background-blend-mode: multiply;
+}
+
+.auth-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.auth-card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.role-option {
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.role-option:hover {
+    border-color: var(--primary-light) !important;
+    background-color: rgba(30, 95, 63, 0.05);
+}
+
+.role-option input:checked+label {
+    font-weight: 600;
+}
+
+/* --- Dashboard/Console Shell Layout --- */
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: #0f1c15;
+    /* Extremely dark forest/graphite */
+    color: #cbd5e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    transition: width var(--transition-speed) ease;
+}
+
+.sidebar-header {
+    height: var(--navbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 1.5rem 0.75rem;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-item {
+    margin-bottom: 0.35rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #a0aec0;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all var(--transition-speed) ease;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+    background-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(30, 95, 63, 0.25);
+}
+
+.sidebar-section-label {
+    padding: 1.2rem 1rem 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4a5568;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-user-info {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+/* Collapsed Sidebar State */
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed .sidebar-brand span,
+.sidebar.collapsed .sidebar-link span,
+.sidebar.collapsed .sidebar-section-label,
+.sidebar.collapsed .sidebar-user-info span,
+.sidebar.collapsed .sidebar-footer {
+    display: none !important;
+}
+
+.sidebar.collapsed .sidebar-brand,
+.sidebar.collapsed .sidebar-link {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-link i {
+    margin-right: 0;
+}
+
+/* Main Content Layout */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex-grow: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left var(--transition-speed) ease;
+}
+
+.main-content.expanded {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Top Navigation Bar */
+.top-navbar {
+    height: var(--navbar-height);
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.sidebar-toggle {
+    color: var(--text-muted);
+    padding: 0;
+    margin-right: 1rem;
+}
+
+.sidebar-toggle:hover {
+    color: var(--text-main);
+}
+
+.page-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+/* --- Card Styles --- */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-card {
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* --- Trek Cards --- */
+.trek-card {
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.trek-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* --- Custom Status Badges --- */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+}
+
+/* Difficulty Badges */
+.diff-easy {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.diff-medium {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.diff-hard {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.diff-expert {
+    background-color: #f3e5f5;
+    color: #4a148c;
+}
+
+/* Trek Status Badges */
+.trek-status-upcoming {
+    background-color: #e0f7fa;
+    color: #006064;
+}
+
+.trek-status-started {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.trek-status-completed {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+}
+
+.trek-status-closed {
+    background-color: #eceff1;
+    color: #37474f;
+}
+
+/* User Account Status Badges */
+.badge.status-pending {
+    background-color: #ffe8cc;
+    color: #d9480f;
+}
+
+.badge.status-approved {
+    background-color: #ebfbee;
+    color: #2b8a3e;
+}
+
+.badge.status-rejected {
+    background-color: #fff0f6;
+    color: #c2255c;
+}
+
+.badge.status-blacklisted {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+/* Welcome Banner in User Dashboard */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 16px !important;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 991.98px) {
+    .sidebar {
+        width: var(--sidebar-collapsed-width);
+    }
+
+    .sidebar .sidebar-brand span,
+    .sidebar .sidebar-link span,
+    .sidebar .sidebar-section-label,
+    .sidebar .sidebar-user-info span,
+    .sidebar .sidebar-footer {
+        display: none !important;
+    }
+
+    .sidebar .sidebar-brand,
+    .sidebar .sidebar-link {
+        justify-content: center;
+    }
+
+    .sidebar .sidebar-link i {
+        margin-right: 0;
+    }
+
+    .main-content {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* Toggle active class on mobile */
+    .sidebar.active-mobile {
+        width: var(--sidebar-width);
+    }
+
+    .sidebar.active-mobile .sidebar-brand span,
+    .sidebar.active-mobile .sidebar-link span,
+    .sidebar.active-mobile .sidebar-section-label,
+    .sidebar.active-mobile .sidebar-user-info span,
+    .sidebar.active-mobile .sidebar-footer {
+        display: block !important;
+    }
+
+    .sidebar.active-mobile .sidebar-brand,
+    .sidebar.active-mobile .sidebar-link {
+        justify-content: start;
+    }
+
+    .sidebar.active-mobile .sidebar-link i {
+        margin-right: 0.75rem;
+    }
+}

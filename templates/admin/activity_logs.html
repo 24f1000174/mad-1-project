@@ -1,0 +1,45 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}Activity Logs{% endblock %}
+{% block page_title %}<h5 class="mb-0 fw-semibold">Activity Logs</h5>{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom py-3">
+        <h6 class="mb-0 fw-semibold"><i class="bi bi-activity me-2 text-primary"></i>Recent Activity (Last 100 entries)</h6>
+    </div>
+    <div class="card-body p-0">
+        {% if logs %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">#</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th class="pe-3">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td class="ps-3 text-muted small">{{ log.id }}</td>
+                        <td class="small fw-medium">{{ log.actor.username if log.actor else 'System' }}</td>
+                        <td>
+                            <span class="badge bg-primary-subtle text-primary">{{ log.action }}</span>
+                        </td>
+                        <td class="small text-muted" style="max-width: 300px;">{{ log.details or '—' }}</td>
+                        <td class="pe-3 small text-muted text-nowrap">{{ log.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-5">
+            <i class="bi bi-journal display-5 d-block mb-2"></i>No activity logged yet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

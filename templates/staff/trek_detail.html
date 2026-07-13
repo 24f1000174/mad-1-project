@@ -1,0 +1,151 @@
+{% extends "layouts/staff_layout.html" %}
+{% block title %}{{ trek.title }}{% endblock %}
+{% block page_title %}<h5 class="mb-0 fw-semibold">{{ trek.title }}</h5>{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Trek Info -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between">
+                <h6 class="mb-0 fw-semibold">Trek Details</h6>
+                <span class="badge trek-status-{{ trek.status|lower }}">{{ trek.status }}</span>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">{{ trek.description }}</p>
+                <hr>
+                <div class="row g-2 small">
+                    <div class="col-6">
+                        <div class="text-muted">Difficulty</div>
+                        <div class="fw-medium"><span class="badge diff-{{ trek.difficulty|lower }}">{{ trek.difficulty
+                                }}</span></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-muted">Price</div>
+                        <div class="fw-bold text-primary">₹{{ "%.0f"|format(trek.price) }}</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-muted">Start Date</div>
+                        <div class="fw-medium">{{ trek.start_date.strftime('%d %b %Y') }}</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-muted">End Date</div>
+                        <div class="fw-medium">{{ trek.end_date.strftime('%d %b %Y') }}</div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <div class="text-muted mb-1">Slot Capacity</div>
+                        <div class="progress" style="height: 8px;">
+                            {% set pct = ((trek.max_slots - trek.available_slots) / trek.max_slots * 100)|int %}
+                            <div class="progress-bar {{ 'bg-danger' if pct >= 90 else 'bg-warning' if pct >= 60 else 'bg-success' }}"
+                                 data-width="{{ pct }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1 small">
+                            <span class="text-muted">{{ trek.max_slots - trek.available_slots }} booked</span>
+                            <span class="fw-medium">{{ trek.available_slots }} available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Slots -->
+        {% if trek.status not in ['Completed', 'Closed'] %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-sliders me-2 text-primary"></i>Update Available Slots</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('staff.update_slots', trek_id=trek.id) }}">
+                    <div class="d-flex gap-2 align-items-end">
+                        <div class="flex-fill">
+                            <label class="form-label small fw-medium">Available Slots</label>
+                            <input type="number" class="form-control" name="available_slots" min="0"
+                                max="{{ trek.max_slots }}" value="{{ trek.available_slots }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-trek">Update</button>
+                    </div>
+                    <div class="form-text">Max: {{ trek.max_slots }} slots</div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Trek Status Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-activity me-2 text-success"></i>Trek Status</h6>
+            </div>
+            <div class="card-body d-flex flex-column gap-2">
+                {% if trek.status == 'Upcoming' %}
+                <form method="POST" action="{{ url_for('staff.mark_started', trek_id=trek.id) }}"
+                    onsubmit="return confirm('Mark this trek as STARTED?')">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-play-circle me-2"></i>Mark as Started
+                    </button>
+                </form>
+                {% elif trek.status == 'Started' %}
+                <form method="POST" action="{{ url_for('staff.mark_completed', trek_id=trek.id) }}"
+                    onsubmit="return confirm('Mark this trek as COMPLETED?')">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle me-2"></i>Mark as Completed
+                    </button>
+                </form>
+                {% else %}
+                <div class="alert alert-secondary mb-0 small text-center py-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Trek is <strong>{{ trek.status }}</strong>. No further status changes available.
+                </div>
+                {% endif %}
+                <a href="{{ url_for('staff.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participant List -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between">
+                <h6 class="mb-0 fw-semibold"><i class="bi bi-people me-2 text-primary"></i>Participants</h6>
+                <span class="badge bg-primary-subtle text-primary">{{ participants|length }} booked</span>
+            </div>
+            <div class="card-body p-0">
+                {% if participants %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3">#</th>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Phone</th>
+                                <th class="pe-3">Emergency Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for b in participants %}
+                            <tr>
+                                <td class="ps-3 text-muted small">{{ loop.index }}</td>
+                                <td class="fw-medium">{{ b.user.username }}</td>
+                                <td class="small">{{ b.user.profile.full_name if b.user.profile and
+                                    b.user.profile.full_name else '—' }}</td>
+                                <td class="small text-muted">{{ b.user.profile.phone if b.user.profile and
+                                    b.user.profile.phone else '—' }}</td>
+                                <td class="pe-3 small text-muted">{{ b.user.profile.emergency_contact if b.user.profile
+                                    and b.user.profile.emergency_contact else '—' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-person-x display-5 d-block mb-2"></i>No participants booked yet.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

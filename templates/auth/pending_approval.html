@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+{% block title %}Awaiting Approval{% endblock %}
+
+{% block body %}
+<div class="auth-page d-flex align-items-center justify-content-center min-vh-100">
+    <div class="text-center p-5">
+        <div class="mb-4">
+            <i class="bi bi-hourglass-split display-1 text-warning"></i>
+        </div>
+        <h1 class="h3 fw-bold mb-3">Account Pending Approval</h1>
+        <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">
+            Your staff account has been submitted and is currently awaiting review by an Administrator.
+            You will be able to log in once your account has been approved.
+        </p>
+        <div class="alert alert-info d-inline-block px-4 py-2 small">
+            <i class="bi bi-envelope me-2"></i>
+            An administrator will review your application shortly.
+        </div>
+        <div class="mt-4">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Login
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

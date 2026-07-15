@@ -13,9 +13,7 @@ from utils.constants import (
     ALL_DIFFICULTIES, ALL_TREK_STATUSES
 )
 
-# ------------------------------------------------------------------
-#  DASHBOARD
-# ------------------------------------------------------------------
+
 
 @admin_bp.route('/dashboard')
 @login_required
@@ -39,9 +37,7 @@ def dashboard():
                            recent_bookings=recent_bookings, recent_logs=recent_logs)
 
 
-# ------------------------------------------------------------------
-#  TREK MANAGEMENT
-# ------------------------------------------------------------------
+
 
 @admin_bp.route('/treks')
 @login_required
@@ -166,9 +162,7 @@ def assign_staff(trek_id):
     return redirect(url_for('admin.treks'))
 
 
-# ------------------------------------------------------------------
-#  STAFF MANAGEMENT
-# ------------------------------------------------------------------
+
 
 @admin_bp.route('/staff')
 @login_required
@@ -235,9 +229,6 @@ def blacklist_staff(user_id):
     return redirect(url_for('admin.staff_list'))
 
 
-# ------------------------------------------------------------------
-#  USER MANAGEMENT
-# ------------------------------------------------------------------
 
 @admin_bp.route('/users')
 @login_required
@@ -281,9 +272,6 @@ def unblacklist_user(user_id):
     return redirect(url_for('admin.users_list'))
 
 
-# ------------------------------------------------------------------
-#  BOOKINGS OVERVIEW
-# ------------------------------------------------------------------
 
 @admin_bp.route('/bookings')
 @login_required
@@ -297,9 +285,6 @@ def all_bookings():
                            filters={'q': query, 'status': status})
 
 
-# ------------------------------------------------------------------
-#  ACTIVITY LOGS (Historical Data)
-# ------------------------------------------------------------------
 
 @admin_bp.route('/logs')
 @login_required

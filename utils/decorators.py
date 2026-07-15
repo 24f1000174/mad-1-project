@@ -22,7 +22,6 @@ def role_required(roles):
             if current_user.role not in roles:
                 abort(403)
 
-            # Enforce staff approval check
             if current_user.role == ROLE_STAFF:
                 if current_user.status == STATUS_PENDING:
                     return redirect(url_for('auth.pending_approval'))
@@ -30,7 +29,6 @@ def role_required(roles):
                     flash("Your staff account is not approved or is blacklisted.", "danger")
                     return redirect(url_for('auth.login'))
 
-            # Enforce blacklisted trekker check
             if current_user.is_blacklisted:
                 flash("Your account has been blacklisted. Access denied.", "danger")
                 return redirect(url_for('auth.login'))

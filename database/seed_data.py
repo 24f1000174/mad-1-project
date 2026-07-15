@@ -2,7 +2,6 @@ import sys
 import os
 from datetime import date, timedelta, datetime
 
-# Adjust path to find modules in parent folder
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from extensions import db
@@ -11,7 +10,6 @@ from database.models import User, Profile, Trek, Booking, Notification, Activity
 def seed_all_data():
     """Seeds the database with default admin and mock data for testing."""
     
-    # 1. Seed Admin if not exists
     admin = User.query.filter_by(role='admin').first()
     if not admin:
         admin = User(
@@ -33,7 +31,6 @@ def seed_all_data():
         db.session.add(profile)
         print("Admin user seeded (Username: admin, Password: admin123)")
 
-    # 2. Seed Staff users if not exists
     staff_data = [
         {'username': 'staff_approved', 'email': 'staff1@trekking.com', 'status': 'approved', 'name': 'John Doe (Approved Staff)'},
         {'username': 'staff_pending', 'email': 'staff2@trekking.com', 'status': 'pending', 'name': 'Jane Smith (Pending Staff)'},
@@ -66,7 +63,6 @@ def seed_all_data():
         else:
             seeded_staff[sd['username']] = u
 
-    # 3. Seed Trekkers if not exists
     trekker_data = [
         {'username': 'trekker_jack', 'email': 'jack@gmail.com', 'status': 'approved', 'name': 'Jack Ryan'},
         {'username': 'trekker_alice', 'email': 'alice@gmail.com', 'status': 'approved', 'name': 'Alice Cooper'},
@@ -101,7 +97,6 @@ def seed_all_data():
         else:
             seeded_trekkers[td['username']] = u
 
-    # 4. Seed Treks if empty
     if Trek.query.count() == 0:
         today = date.today()
         
@@ -175,7 +170,6 @@ def seed_all_data():
             seeded_treks.append(t)
             print(f"Trek seeded: {t.title}")
             
-        # 5. Create a booking demo
         if len(seeded_treks) > 1 and 'trekker_jack' in seeded_trekkers:
             b = Booking(
                 user_id=seeded_trekkers['trekker_jack'].id,
@@ -186,7 +180,6 @@ def seed_all_data():
             )
             db.session.add(b)
             
-            # Action log entry
             log = ActivityLog(
                 user_id=seeded_trekkers['trekker_jack'].id,
                 action='Trek Booking',

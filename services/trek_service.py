@@ -17,7 +17,6 @@ class TrekService:
         if not title or not description or not difficulty or not start_date or not end_date or not price or not max_slots:
             return None, "All fields are required."
 
-        # Date validations
         if isinstance(start_date, str):
             try:
                 start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
@@ -36,7 +35,6 @@ class TrekService:
         if start_date < date.today():
             return None, "Trek start date cannot be in the past."
 
-        # Numeric validations
         try:
             price = float(price)
             if price <= 0:
@@ -51,7 +49,6 @@ class TrekService:
         except ValueError:
             return None, "Maximum slots must be a valid integer."
 
-        # Staff verification if staff_id is provided
         if staff_id:
             staff = User.query.get(staff_id)
             if not staff or staff.role != ROLE_STAFF or staff.status != STATUS_APPROVED:
@@ -88,7 +85,6 @@ class TrekService:
         if not trek:
             return None, "Trek not found."
 
-        # Parse dates
         if isinstance(start_date, str):
             start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         if isinstance(end_date, str):
@@ -111,13 +107,10 @@ class TrekService:
         except ValueError:
             return None, "Maximum slots must be a valid integer."
 
-        # Check booking slot conflicts
-        # booked_slots = original_max_slots - original_available_slots
         booked_slots = trek.max_slots - trek.available_slots
         if max_slots < booked_slots:
             return None, f"Cannot reduce slots below the count of existing bookings ({booked_slots})."
 
-        # Verify staff if changed
         if staff_id:
             staff = User.query.get(staff_id)
             if not staff or staff.role != ROLE_STAFF or staff.status != STATUS_APPROVED:
@@ -131,7 +124,6 @@ class TrekService:
             trek.end_date = end_date
             trek.price = price
             trek.max_slots = max_slots
-            # Recalculate available slots
             trek.available_slots = max_slots - booked_slots
             trek.staff_id = staff_id if staff_id else None
             

@@ -9,9 +9,6 @@ from utils.decorators import role_required
 from utils.helpers import log_activity
 from utils.constants import ROLE_TREKKER, ALL_DIFFICULTIES, TREK_UPCOMING
 
-# ------------------------------------------------------------------
-#  TREKKER DASHBOARD
-# ------------------------------------------------------------------
 
 @user_bp.route('/dashboard')
 @login_required
@@ -20,19 +17,16 @@ def dashboard():
     """User dashboard showing upcoming booked treks and unread notifications."""
     bookings = BookingService.get_user_bookings(current_user.id)
 
-    # Unread notifications
     unread_notifications = (
         Notification.query
         .filter_by(user_id=current_user.id, read_status=False)
         .order_by(Notification.created_at.desc())
         .all()
     )
-    # Mark notifications as read once the dashboard is viewed
     for notif in unread_notifications:
         notif.read_status = True
     db.session.commit()
 
-    # Only Upcoming/Started booked treks for the "active trips" card
     active_bookings = [b for b in bookings if b.status == 'Booked' and b.trek.status in ['Upcoming', 'Started']]
 
     return render_template('user/dashboard.html',
@@ -41,9 +35,6 @@ def dashboard():
                            notifications=unread_notifications)
 
 
-# ------------------------------------------------------------------
-#  TREK CATALOGUE + SEARCH
-# ------------------------------------------------------------------
 
 @user_bp.route('/treks')
 @login_required
@@ -55,13 +46,11 @@ def browse_treks():
     min_price = request.args.get('min_price', '')
     max_price = request.args.get('max_price', '')
 
-    # Only show Upcoming treks to trekkers (not closed/completed/started)
     treks = SearchService.search_treks(
         query=query, difficulty=difficulty, status=TREK_UPCOMING,
         min_price=min_price, max_price=max_price
     )
 
-    # Get IDs of treks already booked by this user (active bookings only)
     my_booking_trek_ids = set(
         b.trek_id for b in Booking.query
         .filter_by(user_id=current_user.id, status='Booked')
@@ -83,7 +72,6 @@ def trek_detail(trek_id):
     """Shows full details of a specific trek."""
     trek = Trek.query.get_or_404(trek_id)
 
-    # Check if user has already booked this trek
     existing_booking = Booking.query.filter_by(
         user_id=current_user.id, trek_id=trek_id, status='Booked'
     ).first()
@@ -92,9 +80,6 @@ def trek_detail(trek_id):
                            existing_booking=existing_booking)
 
 
-# ------------------------------------------------------------------
-#  BOOKING
-# ------------------------------------------------------------------
 
 @user_bp.route('/treks/<int:trek_id>/book', methods=['POST'])
 @login_required
@@ -122,9 +107,6 @@ def cancel_booking(booking_id):
     return redirect(url_for('user.booking_history'))
 
 
-# ------------------------------------------------------------------
-#  BOOKING HISTORY
-# ------------------------------------------------------------------
 
 @user_bp.route('/bookings')
 @login_required
@@ -135,9 +117,6 @@ def booking_history():
     return render_template('user/booking_history.html', bookings=bookings)
 
 
-# ------------------------------------------------------------------
-#  PROFILE MANAGEMENT
-# ------------------------------------------------------------------
 
 @user_bp.route('/profile')
 @login_required
@@ -165,7 +144,6 @@ def edit_profile():
             flash("Full name cannot be empty.", "danger")
             return render_template('user/edit_profile.html', user=current_user)
 
-        # Create profile if it doesn't exist (safety guard)
         if not user_profile:
             from database.models import Profile as ProfileModel
             user_profile = ProfileModel(user_id=current_user.id)

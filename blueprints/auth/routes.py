@@ -8,7 +8,6 @@ from utils.helpers import log_activity
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Authenticates and logs in a user."""
-    # Redirect if already logged in
     if current_user.is_authenticated:
         return redirect_role_dashboard(current_user)
 
@@ -22,7 +21,6 @@ def login():
             flash(error, 'danger')
             return render_template('auth/login.html')
 
-        # Check for pending staff approval before session registration
         if user.role == ROLE_STAFF and user.status == STATUS_PENDING:
             return redirect(url_for('auth.pending_approval'))
 

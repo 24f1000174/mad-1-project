@@ -14,7 +14,6 @@ class AuthService:
         Returns:
             tuple: (User, None) if successful, (None, error_string) if failed.
         """
-        # Form field validation
         if not username or not email or not password or not role:
             return None, "All fields are required."
             
@@ -30,18 +29,15 @@ class AuthService:
         if role not in [ROLE_STAFF, ROLE_TREKKER]:
             return None, "Invalid role choice."
 
-        # Check uniqueness
         if User.query.filter_by(username=username).first():
             return None, "Username is already taken."
             
         if User.query.filter_by(email=email).first():
             return None, "Email is already registered."
 
-        # Establish default status
         status = STATUS_PENDING if role == ROLE_STAFF else STATUS_APPROVED
 
         try:
-            # Create user
             new_user = User(
                 username=username,
                 email=email,
@@ -52,7 +48,6 @@ class AuthService:
             db.session.add(new_user)
             db.session.flush() # Get new_user.id
 
-            # Create empty/basic profile
             new_profile = Profile(
                 user_id=new_user.id,
                 full_name=full_name,
@@ -79,13 +74,11 @@ class AuthService:
         if not username_or_email or not password:
             return None, "Username/Email and Password are required."
 
-        # Search by username or email
         user = User.query.filter((User.username == username_or_email) | (User.email == username_or_email)).first()
         
         if not user or not user.check_password(password):
             return None, "Invalid username/email or password."
 
-        # Check blacklist constraints
         if user.status == STATUS_BLACKLISTED:
             return None, "Your account has been blacklisted. Access is denied."
 

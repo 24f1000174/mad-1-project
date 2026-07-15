@@ -13,7 +13,6 @@ def log_activity(user_id, action, details=None):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        # Log to application stdout/logging as fallback
         print(f"Error logging activity: {str(e)}")
 
 def create_notification(user_id, message):

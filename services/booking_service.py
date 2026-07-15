@@ -17,23 +17,18 @@ class BookingService:
         if not trek:
             return None, "Trek not found."
 
-        # Rule: Cannot book a closed trek
         if trek.status == TREK_CLOSED:
             return None, "This trek is closed and no longer accepting bookings."
 
-        # Rule: Cannot book a completed trek
         if trek.status == TREK_COMPLETED:
             return None, "This trek has already been completed."
 
-        # Rule: Cannot book a started trek
         if trek.status == TREK_STARTED:
             return None, "This trek has already started and is no longer accepting bookings."
 
-        # Rule: Prevent overbooking
         if trek.available_slots <= 0:
             return None, "Sorry, this trek is fully booked with no available slots."
 
-        # Rule: Prevent duplicate booking for the same trek
         existing = Booking.query.filter_by(
             user_id=user_id, trek_id=trek_id, status=BOOKING_ACTIVE
         ).first()
@@ -79,7 +74,6 @@ class BookingService:
         if not trek:
             return False, "Associated trek not found."
 
-        # Rule: Cannot cancel after the trek has started
         if trek.status in [TREK_STARTED, TREK_COMPLETED]:
             return False, "Cancellation is not allowed once the trek has started or is completed."
 

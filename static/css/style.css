@@ -1,36 +1,31 @@
-/* ==========================================================================
-   Trekking Management App - Custom Stylesheet
-   Roll Number: 24F1000174
-   ========================================================================== */
 
-/* Custom Typography & Base Variables */
 :root {
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    /* Harmonious Outdoor-Modern Palette */
+
     --primary: #1e5f3f;
-    /* Rich Forest Green */
+   
     --primary-light: #2d8a5c;
     --primary-dark: #123d28;
     --primary-rgb: 30, 95, 63;
 
     --secondary: #e6a15c;
-    /* Warm Trail Gold */
+    
     --secondary-hover: #d18d45;
 
     --bg-app: #f5f7f6;
-    /* Soft Off-White/Sage Gray */
+    
     --bg-card: #ffffff;
     --text-main: #2b3a32;
     --text-muted: #62756a;
     --border-color: #e2e8e4;
 
-    /* Role Specific Palette */
+    
     --role-admin: #6f42c1;
     --role-staff: #198754;
     --role-trekker: #0d6efd;
 
-    /* UI Status Colors */
+   
     --status-upcoming: #0dcaf0;
     --status-started: #ffc107;
     --status-completed: #198754;
@@ -51,7 +46,7 @@ body {
     padding: 0;
 }
 
-/* --- Utility Typography --- */
+
 h1,
 h2,
 h3,
@@ -62,7 +57,7 @@ h6 {
     letter-spacing: -0.02em;
 }
 
-/* --- Common UI Components --- */
+
 .btn-trek {
     background-color: var(--primary);
     color: #ffffff;
@@ -83,7 +78,7 @@ h6 {
     transform: translateY(0);
 }
 
-/* Form Styling */
+
 .form-control,
 .form-select {
     border: 1px solid var(--border-color);
@@ -98,7 +93,7 @@ h6 {
     box-shadow: 0 0 0 4px rgba(30, 95, 63, 0.1);
 }
 
-/* --- Authentication Pages --- */
+
 .auth-page {
     background: linear-gradient(135deg, var(--primary-dark) 0%, #15221b 100%),
         url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1950&q=80');
@@ -133,17 +128,17 @@ h6 {
     font-weight: 600;
 }
 
-/* --- Dashboard/Console Shell Layout --- */
+
 .dashboard-wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar Styling */
+
 .sidebar {
     width: var(--sidebar-width);
     background-color: #0f1c15;
-    /* Extremely dark forest/graphite */
+    
     color: #cbd5e0;
     min-height: 100vh;
     display: flex;

@@ -8,21 +8,18 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     
-    # Ensure the instance folder exists for SQLite db
+    
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
         
-    # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
     
-    # Import models to register them with SQLAlchemy and Flask-Login
     from database import models
 
-    
-    # Register blueprints
+
     from blueprints.common import common_bp
     from blueprints.auth import auth_bp
     from blueprints.admin import admin_bp
@@ -35,10 +32,8 @@ def create_app(config_class=Config):
     app.register_blueprint(staff_bp)
     app.register_blueprint(user_bp)
     
-    # Register error handlers
     register_error_handlers(app)
     
-    # Auto-create database tables and seed default admin user
     with app.app_context():
         db.create_all()
         from database.models import User, Profile

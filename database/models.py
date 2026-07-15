@@ -15,7 +15,6 @@ class User(db.Model, UserMixin):
     status = db.Column(db.String(20), nullable=False, default='approved')  # 'pending', 'approved', 'rejected', 'blacklisted'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relationships
     profile = db.relationship('Profile', backref='user', uselist=False, cascade="all, delete-orphan")
     bookings = db.relationship('Booking', backref='user', lazy=True, cascade="all, delete-orphan")
     assigned_treks = db.relationship('Trek', backref='assigned_staff', lazy=True, foreign_keys='Trek.staff_id')
@@ -86,7 +85,6 @@ class Trek(db.Model):
     status = db.Column(db.String(20), nullable=False, default='Upcoming')  # 'Upcoming', 'Started', 'Completed', 'Closed'
     staff_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
 
-    # Relationships
     bookings = db.relationship('Booking', backref='trek', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -136,7 +134,6 @@ class ActivityLog(db.Model):
         return f"<ActivityLog action={self.action} user_id={self.user_id}>"
 
 
-# User loader callback for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
